@@ -5,8 +5,8 @@ use ustreamer::utransport_builder::UTransportBuilder;
 use aidl_rust_codegen::binder_impls::IUBus::IUBus;
 use crate::UpClientAndroid;
 
-struct AndroidTransportBuilder {
-    ubus: Arc<Strong<dyn IUBus>>,
+pub struct AndroidTransportBuilder {
+    pub ubus: Arc<Strong<dyn IUBus>>,
 }
 
 impl UTransportBuilder for AndroidTransportBuilder {
