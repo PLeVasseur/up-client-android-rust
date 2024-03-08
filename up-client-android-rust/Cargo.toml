@@ -1,0 +1,19 @@
+[package]
+name = "up-client-android-rust"
+rust-version.workspace = true
+version.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+edition.workspace = true
+keywords.workspace = true
+license.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+aidl-rust-codegen = { path = "../aidl-rust-codegen" }
+binder = {  workspace = true }
+binder_tokio = {  workspace = true }
+up-rust = { workspace = true }
+async-trait = { workspace = true }

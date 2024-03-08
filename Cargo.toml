@@ -26,6 +26,7 @@ members = [
     "aidl-rust-codegen",
     "iulistener-example",
     "iubus-iulistener-example",
+    "up-client-android-rust",
 ]
 
 [workspace.package]
