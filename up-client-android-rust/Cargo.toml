@@ -13,7 +13,8 @@ license.workspace = true
 
 [dependencies]
 aidl-rust-codegen = { path = "../aidl-rust-codegen" }
+async-trait = { workspace = true }
 binder = {  workspace = true }
 binder_tokio = {  workspace = true }
 up-rust = { workspace = true }
-async-trait = { workspace = true }
+ustreamer = { workspace = true }

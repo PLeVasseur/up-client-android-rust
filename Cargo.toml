@@ -50,4 +50,8 @@ clap = { version = "4.1.7", features = ["derive"] }
 lazy_static = "1.4.0"
 protobuf = { version = "3.3" }
 tokio = { version = "1.25.0", features = ["full"] }
-up-rust = { git = "https://github.com/eclipse-uprotocol/up-rust", branch = "main" }
+# main
+# up-rust = { git = "https://github.com/eclipse-uprotocol/up-rust", branch = "main" }
+# latest stable supported by up-client-zenoh-rust
+up-rust = { git = "https://github.com/eclipse-uprotocol/up-rust", rev = "68c8a1d94f0006daf4ba135c9cbbfddcd793108d" }
+ustreamer = { git = "https://github.com/PLeVasseur/up-streamer-rust.git", branch = "feature/initial-pluggable-ustreamer" }
