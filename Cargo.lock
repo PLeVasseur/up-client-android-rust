@@ -3198,7 +3198,7 @@ dependencies = [
 [[package]]
 name = "ustreamer"
 version = "0.1.5-dev"
-source = "git+https://github.com/PLeVasseur/up-streamer-rust.git?branch=feature/initial-pluggable-ustreamer#9d5c4e73b2a624e6b25ad6d617af08f4a104c5b3"
+source = "git+https://github.com/PLeVasseur/up-streamer-rust.git?branch=feature/initial-pluggable-ustreamer#7f6a826b39bb82033ca2c216bff610856959dc38"
 dependencies = [
  "async-std",
  "async-trait",
