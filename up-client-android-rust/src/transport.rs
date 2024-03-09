@@ -1,7 +1,7 @@
+use crate::UpClientAndroid;
 use async_trait::async_trait;
 use up_rust::transport::datamodel::UTransport;
 use up_rust::uprotocol::{UMessage, UStatus, UUri};
-use crate::UpClientAndroid;
 
 #[async_trait]
 impl UTransport for UpClientAndroid {

@@ -3139,6 +3139,7 @@ dependencies = [
  "async-trait",
  "binder",
  "binder_tokio",
+ "protobuf",
  "up-rust",
  "ustreamer",
 ]
