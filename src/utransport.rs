@@ -166,7 +166,7 @@ impl UTransport for UPClientAndroid {
         );
 
         let Ok(listener_obj) =
-            env.new_object(listener_class, "()V", &[JValue::Long(hash as jlong)])
+            env.new_object(listener_class, "(J)V", &[JValue::Long(hash as jlong)])
         else {
             error!("Failed to create a new instance of UListenerBridge class");
             env.exception_describe().unwrap();
