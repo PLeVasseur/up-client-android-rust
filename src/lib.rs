@@ -1,5 +1,9 @@
 use jni::objects::{GlobalRef, JObject};
 use jni::{JNIEnv, JavaVM};
+use log::trace;
+
+const UPCLIENTANDROID_TAG: &str = "UPClientAndroid:";
+const UPCLIENTANDROID_FN_NEW_TAG: &str = "new():";
 
 pub struct UPClientAndroid {
     vm: JavaVM,
@@ -23,6 +27,12 @@ impl UPClientAndroid {
 
         // Obtain the JavaVM from the JNIEnv
         let vm = env.get_java_vm().expect("Failed to get JavaVM");
+
+        trace!(
+            "{}:{} Able to convert local refs to global ones and obtain a vm",
+            UPCLIENTANDROID_TAG,
+            UPCLIENTANDROID_FN_NEW_TAG
+        );
 
         Self {
             vm,

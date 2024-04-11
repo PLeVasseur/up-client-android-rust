@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 jni = { version = "0.21.1" }
 up-rust = { git = "https://github.com/eclipse-uprotocol/up-rust", rev = "c705ac97602ad6917a93d23651e8a504ec7bb718" }
+log = "0.4.21"
