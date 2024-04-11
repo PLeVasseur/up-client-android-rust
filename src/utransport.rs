@@ -233,7 +233,7 @@ impl UTransport for UPClientAndroid {
             UPCLIENTANDROID_TAG,
             UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
         );
-        let uuri_obj = env
+        let Ok(uuri_obj) = env
             .call_static_method(
                 native_bridge_class,
                 "deserializeToUUri",
@@ -242,7 +242,19 @@ impl UTransport for UPClientAndroid {
             )
             .expect("Java method failed")
             .l()
-            .expect("Expected a UUri object");
+        else {
+            trace!(
+                "{}:{} Failed when calling deserializeToUUri",
+                UPCLIENTANDROID_TAG,
+                UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
+            );
+
+            return Err(UStatus::fail_with_code(
+                UCode::INTERNAL,
+                "Failed when calling deserializeToUUri",
+            )); // Replace UStatus::Error with appropriate error handling
+        };
+
         trace!(
             "{}:{} Turned serialized JByteArray into UUri JObject",
             UPCLIENTANDROID_TAG,
