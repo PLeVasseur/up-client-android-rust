@@ -11,7 +11,7 @@ use std::collections::hash_map::DefaultHasher;
 use std::collections::{HashMap, HashSet};
 use std::hash::{Hash, Hasher};
 use std::sync::{Arc, Mutex};
-use up_rust::{ComparableListener, UListener, UMessage, UStatus, UTransport, UUri};
+use up_rust::{ComparableListener, UCode, UListener, UMessage, UStatus, UTransport, UUri};
 
 const CLASS_UURI: &str = "Lorg/eclipse/uprotocol/v1/UUri;";
 const CLASS_ULISTENER: &str = "Lorg/eclipse/uprotocol/transport/UListener;";
@@ -122,11 +122,26 @@ impl UTransport for UPClientAndroid {
             .new_object(listener_class, "()V", &[JValue::Long(hash as jlong)])
             .expect("Failed to create UListenerImpl object");
 
+        // Check if an exception occurred
+        if env.exception_check().unwrap() {
+            // Optionally log or describe the exception
+            env.exception_describe().unwrap(); // This will print the exception details to the console
+            env.exception_clear().unwrap(); // Clears the exception so that JNI calls can continue
+
+            return Err(UStatus::fail_with_code(
+                UCode::INTERNAL,
+                "Exception was thrown",
+            )); // Replace UStatus::Error with appropriate error handling
+        }
+
         let up_client_ref = self.up_client.as_obj(); // Convert GlobalRef to JObject
 
         let Ok(uuri_bytes) = topic.write_to_bytes() else {
             error!("Failed to serialize UUri to bytes");
-            return Ok(());
+            return Err(UStatus::fail_with_code(
+                UCode::INTERNAL,
+                "Failed to obtain UUri bytes",
+            )); // Replace UStatus::Error with appropriate error handling
         };
         let byte_array = env
             .byte_array_from_slice(&uuri_bytes)
@@ -145,6 +160,19 @@ impl UTransport for UPClientAndroid {
             .expect("Java method failed")
             .l()
             .expect("Expected a UUri object");
+
+        // Check if an exception occurred
+        if env.exception_check().unwrap() {
+            // Optionally log or describe the exception
+            env.exception_describe().unwrap(); // This will print the exception details to the console
+            env.exception_clear().unwrap(); // Clears the exception so that JNI calls can continue
+
+            return Err(UStatus::fail_with_code(
+                UCode::INTERNAL,
+                "Exception was thrown",
+            )); // Replace UStatus::Error with appropriate error handling
+        }
+
         let args = [JValue::Object(&uuri_obj), JValue::Object(&listener_obj)];
 
         env.call_method(
@@ -154,6 +182,18 @@ impl UTransport for UPClientAndroid {
             &args,
         )
         .expect("Unable to call UPClient.registerListner()");
+
+        // Check if an exception occurred
+        if env.exception_check().unwrap() {
+            // Optionally log or describe the exception
+            env.exception_describe().unwrap(); // This will print the exception details to the console
+            env.exception_clear().unwrap(); // Clears the exception so that JNI calls can continue
+
+            return Err(UStatus::fail_with_code(
+                UCode::INTERNAL,
+                "Exception was thrown",
+            )); // Replace UStatus::Error with appropriate error handling
+        }
 
         todo!()
     }
