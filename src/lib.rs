@@ -1,3 +1,5 @@
+pub mod utransport;
+
 use jni::objects::{GlobalRef, JObject};
 use jni::{JNIEnv, JavaVM};
 use log::trace;
