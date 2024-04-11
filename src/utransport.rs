@@ -128,10 +128,19 @@ impl UTransport for UPClientAndroid {
         // TODO: Add logic for making sure we only add listener once
         let hash = store_listener(topic.clone(), listener);
 
-        // Create a new UListenerImpl object
-        let listener_class = env
-            .find_class("org/eclipse/uprotocol/streamer/service/UListenerNativeBridge")
-            .expect("Failed to find UListenerImpl class");
+        let Ok(listener_class) =
+            env.find_class("org/eclipse/uprotocol/streamer/service/UListenerNativeBridge")
+        else {
+            error!("Failed to find UListenerNativeBridge class");
+            env.exception_describe().unwrap();
+            env.exception_clear().unwrap();
+            return Err(UStatus::fail_with_code(UCode::INTERNAL, "Class not found"));
+        };
+        trace!(
+            "{}:{} Got UListenerNativeBridge class",
+            UPCLIENTANDROID_TAG,
+            UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
+        );
 
         // Check if an exception occurred
         if env.exception_check().unwrap() {
