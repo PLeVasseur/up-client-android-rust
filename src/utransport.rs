@@ -133,6 +133,23 @@ impl UTransport for UPClientAndroid {
             .find_class("org/eclipse/uprotocol/streamer/service/UListenerNativeBridge")
             .expect("Failed to find UListenerImpl class");
 
+        // Check if an exception occurred
+        if env.exception_check().unwrap() {
+            trace!(
+                "{}:{} Hit exception constructing trying to find UListenerNativeBridge class",
+                UPCLIENTANDROID_TAG,
+                UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
+            );
+            // Optionally log or describe the exception
+            env.exception_describe().unwrap(); // This will print the exception details to the console
+            env.exception_clear().unwrap(); // Clears the exception so that JNI calls can continue
+
+            return Err(UStatus::fail_with_code(
+                UCode::INTERNAL,
+                "Exception was thrown",
+            )); // Replace UStatus::Error with appropriate error handling
+        }
+
         trace!(
             "{}:{} Got UListenerNativeBridge class",
             UPCLIENTANDROID_TAG,
