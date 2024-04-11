@@ -165,9 +165,14 @@ impl UTransport for UPClientAndroid {
             UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
         );
 
-        let listener_obj = env
-            .new_object(listener_class, "()V", &[JValue::Long(hash as jlong)])
-            .expect("Failed to create UListenerNativeBridge object");
+        let Ok(listener_obj) =
+            env.new_object(listener_class, "()V", &[JValue::Long(hash as jlong)])
+        else {
+            error!("Failed to create a new instance of UListenerBridge class");
+            env.exception_describe().unwrap();
+            env.exception_clear().unwrap();
+            return Err(UStatus::fail_with_code(UCode::INTERNAL, "Class not found"));
+        };
 
         trace!(
             "{}:{} Constructed UListenerNativeBridge object",
