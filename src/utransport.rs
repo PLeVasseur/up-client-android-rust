@@ -225,9 +225,10 @@ impl UTransport for UPClientAndroid {
             UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
         );
 
-        let native_bridge_class = env
-            .find_class("org/eclipse/uprotocol/streamer/service/NativeBridge")
-            .expect("Couldn't find the Helper class");
+        let native_bridge_class = Arc::new(
+            env.find_class("org/eclipse/uprotocol/streamer/service/NativeBridge")
+                .expect("Couldn't find the Helper class"),
+        );
         trace!(
             "{}:{} Found NativeBridge class",
             UPCLIENTANDROID_TAG,
@@ -254,7 +255,7 @@ impl UTransport for UPClientAndroid {
         // let foo_val = JValue::try_from(foo);
         // let foo_val = foo_val.unwrap();
         let Ok(uuri_obj) = env.call_static_method(
-            native_bridge_class,
+            &*native_bridge_class,
             "deserializeToUUri",
             format!("([B){CLASS_UURI}"),
             &[jvalue_byte_array],
@@ -342,6 +343,31 @@ impl UTransport for UPClientAndroid {
 
         trace!(
             "{}:{} returned UStatus as a JValueOwned: {ustatus:?}",
+            UPCLIENTANDROID_TAG,
+            UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
+        );
+
+        let Ok(ustatus_bytes) = env.call_static_method(
+            &*native_bridge_class,
+            "serializeFromUStatus",
+            format!("({CLASS_USTATUS})[B;"),
+            &[(&ustatus).into()],
+        ) else {
+            trace!(
+                "{}:{} Failed when calling serializeFromUStatus",
+                UPCLIENTANDROID_TAG,
+                UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
+            );
+            env.exception_describe().unwrap();
+            env.exception_clear().unwrap();
+            return Err(UStatus::fail_with_code(
+                UCode::INTERNAL,
+                "Failed when calling serializeFromUStatus",
+            )); // Replace UStatus::Error with appropriate error handling
+        };
+
+        trace!(
+            "{}:{} Called serializeFromUStatus",
             UPCLIENTANDROID_TAG,
             UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
         );
