@@ -233,25 +233,56 @@ impl UTransport for UPClientAndroid {
             UPCLIENTANDROID_TAG,
             UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
         );
-        let Ok(uuri_obj) = env
-            .call_static_method(
-                native_bridge_class,
-                "deserializeToUUri",
-                "([B)Lorg/eclipse/uprotocol/streamer/service/UUri;",
-                &[JValue::Object(&JObject::from(byte_array))],
-            )
-            .expect("Java method failed")
-            .l()
-        else {
+
+        // let Ok(foo) = JObject::from(byte_array) else {
+        //     trace!(
+        //         "{}:{} Failed when converting to JObject from JByteArray",
+        //         UPCLIENTANDROID_TAG,
+        //         UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
+        //     );
+        //     env.exception_describe().unwrap();
+        //     env.exception_clear().unwrap();
+        //     return Err(UStatus::fail_with_code(
+        //         UCode::INTERNAL,
+        //         "Failed when calling deserializeToUUri",
+        //     )); // Replace UStatus::Error with appropriate error handling
+        // };
+
+        let jvalue_byte_array = JValue::Object(&*byte_array);
+
+        // let foo = JObject::from(byte_array);
+        // let foo_val = JValue::try_from(foo);
+        // let foo_val = foo_val.unwrap();
+        let Ok(uuri_obj) = env.call_static_method(
+            native_bridge_class,
+            "deserializeToUUri",
+            "([B)Lorg/eclipse/uprotocol/streamer/service/UUri;",
+            &[jvalue_byte_array],
+        ) else {
             trace!(
                 "{}:{} Failed when calling deserializeToUUri",
                 UPCLIENTANDROID_TAG,
                 UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
             );
-
+            env.exception_describe().unwrap();
+            env.exception_clear().unwrap();
             return Err(UStatus::fail_with_code(
                 UCode::INTERNAL,
                 "Failed when calling deserializeToUUri",
+            )); // Replace UStatus::Error with appropriate error handling
+        };
+
+        let Ok(uuri_obj) = uuri_obj.l() else {
+            trace!(
+                "{}:{} Failed when converting uuri_obj to a JObject",
+                UPCLIENTANDROID_TAG,
+                UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
+            );
+            env.exception_describe().unwrap();
+            env.exception_clear().unwrap();
+            return Err(UStatus::fail_with_code(
+                UCode::INTERNAL,
+                "Failed when converting uuri_obj to a JObject",
             )); // Replace UStatus::Error with appropriate error handling
         };
 
