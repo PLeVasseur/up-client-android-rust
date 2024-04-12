@@ -11,10 +11,15 @@ pub struct UPClientAndroid {
     vm: JavaVM,
     up_client: GlobalRef,
     usub: GlobalRef,
+    uuri_class: GlobalRef,
+    ustatus_class: GlobalRef,
+    ulistener_native_bridge_class: GlobalRef,
+    native_bridge_class: GlobalRef,
 }
 
 impl UPClientAndroid {
-    pub async fn new(vm: JavaVM, up_client: GlobalRef, usub: GlobalRef) -> Self {
+    pub async fn new(vm: JavaVM, up_client: GlobalRef, usub: GlobalRef, uuri_class: GlobalRef,
+    ustatus_class: GlobalRef, ulistener_native_bridge_class: GlobalRef, native_bridge_class: GlobalRef) -> Self {
         trace!(
             "{}:{} Able to instantiate UPClientAndroid",
             UPCLIENTANDROID_TAG,
@@ -24,6 +29,10 @@ impl UPClientAndroid {
             vm,
             up_client,
             usub,
+            uuri_class,
+            ustatus_class,
+            ulistener_native_bridge_class,
+            native_bridge_class
         }
     }
 }
