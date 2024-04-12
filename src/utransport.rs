@@ -350,7 +350,7 @@ impl UTransport for UPClientAndroid {
         let Ok(ustatus_bytes) = env.call_static_method(
             &*native_bridge_class,
             "serializeFromUStatus",
-            format!("({CLASS_USTATUS})[B;"),
+            format!("({CLASS_USTATUS})[B"),
             &[(&ustatus).into()],
         ) else {
             trace!(
