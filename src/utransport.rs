@@ -57,7 +57,7 @@ fn get_listener(hash: u64) -> Option<Arc<dyn UListener>> {
 }
 
 #[no_mangle]
-pub extern "system" fn Java_org_eclipse_uprotocol_streamer_service_UListenerNativeBridge_onReceive<
+pub extern "system" fn Java_org_eclipse_uprotocol_streamer_service_UListenerNativeBridge_onNativeReceive<
     'local,
 >(
     mut env: JNIEnv<'local>,
