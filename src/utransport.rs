@@ -256,7 +256,7 @@ impl UTransport for UPClientAndroid {
         let Ok(uuri_obj) = env.call_static_method(
             native_bridge_class,
             "deserializeToUUri",
-            "([B)Lorg/eclipse/uprotocol/streamer/service/UUri;",
+            format!("([B){CLASS_UURI}"),
             &[jvalue_byte_array],
         ) else {
             trace!(
