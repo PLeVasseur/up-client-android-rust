@@ -316,15 +316,32 @@ impl UTransport for UPClientAndroid {
             UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
         );
 
-        env.call_method(
+        let Ok(ustatus) = env.call_method(
             up_client_ref,
             "registerListener",
             register_listener_signature(),
             &args,
-        )
-        .expect("Unable to call UPClient.registerListner()");
+        ) else {
+            trace!(
+                "{}:{} Unable to call UPClient.registerListener()",
+                UPCLIENTANDROID_TAG,
+                UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
+            );
+            env.exception_describe().unwrap();
+            env.exception_clear().unwrap();
+            return Err(UStatus::fail_with_code(
+                UCode::INTERNAL,
+                "Failed when calling UPClient.registerListener()",
+            )); // Replace UStatus::Error with appropriate error handling
+        };
         trace!(
             "{}:{} Called registerListener on the Java UPClient",
+            UPCLIENTANDROID_TAG,
+            UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
+        );
+
+        trace!(
+            "{}:{} returned UStatus as a JValueOwned: {ustatus:?}",
             UPCLIENTANDROID_TAG,
             UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
         );
