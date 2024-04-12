@@ -101,12 +101,6 @@ impl UTransport for UPClientAndroid {
         topic: UUri,
         listener: Arc<dyn UListener>,
     ) -> Result<(), UStatus> {
-        // here I want to call the held GlobalRef up_client's registerListener() method
-        // and pass in a Java class implementing UListener
-        //
-        // that Java class implementing UListener would then be used to call the passed in
-        // the Rust listener: Arc<dyn UListener>
-
         trace!(
             "{}:{} Entered register_listener",
             UPCLIENTANDROID_TAG,
@@ -235,25 +229,8 @@ impl UTransport for UPClientAndroid {
             UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
         );
 
-        // let Ok(foo) = JObject::from(byte_array) else {
-        //     trace!(
-        //         "{}:{} Failed when converting to JObject from JByteArray",
-        //         UPCLIENTANDROID_TAG,
-        //         UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
-        //     );
-        //     env.exception_describe().unwrap();
-        //     env.exception_clear().unwrap();
-        //     return Err(UStatus::fail_with_code(
-        //         UCode::INTERNAL,
-        //         "Failed when calling deserializeToUUri",
-        //     )); // Replace UStatus::Error with appropriate error handling
-        // };
-
         let jvalue_byte_array = JValue::Object(&*byte_array);
 
-        // let foo = JObject::from(byte_array);
-        // let foo_val = JValue::try_from(foo);
-        // let foo_val = foo_val.unwrap();
         let Ok(uuri_obj) = env.call_static_method(
             &*native_bridge_class,
             "deserializeToUUri",
@@ -371,78 +348,6 @@ impl UTransport for UPClientAndroid {
             UPCLIENTANDROID_TAG,
             UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
         );
-
-        // let foo = match ustatus_bytes {
-        //     JValueOwned::Object(obj) => {
-        //         let jbytearray = JByteArray::from(obj);
-        //         let bar: Vec<u8> = Vec::from(jbytearray);
-        //         Ok(bar)
-        //         // let byte_vec: Vec<u8> = *jbytearray.as_ref();
-        //         // Ok(byte_vec)
-        //
-        //         // // Cast the JObject to jbyteArray directly without checking Result
-        //         // let byte_array = obj.cast::<jbyteArray>();
-        //         // if !byte_array.is_null() {  // Check that the cast did not return null
-        //         //     let length = env.get_array_length(byte_array).expect("oops, no array length") as usize;
-        //         //     let mut buf = vec![0; length];  // Create a buffer of the appropriate length
-        //         //
-        //         //     // Get the byte array elements
-        //         //     env.get_byte_array_region(byte_array, 0, &mut buf).expect("oops couldn't get byte region");
-        //         //
-        //         //     Ok(buf)  // Now `buf` contains the byte array as Vec<u8>
-        //         // } else {
-        //         //     Err("Expected a byte array but found a different type".to_string())
-        //         // }
-        //     },
-        //     _ => Err("Expected an object containing a byte array but found a different type".to_string())
-        // };
-
-        // let foo = match ustatus_bytes {
-        //     JValueOwned::Object(obj) => {
-        //         if let Some(byte_array) = obj.into_inner().cast::<jbyteArray>() {
-        //             // Get the byte array elements
-        //             let Ok(elements) = env.get_array_elements(byte_array, jni::objects::ReleaseMode::CopyBack) else {
-        //                 trace!(
-        //                     "{}:{} Unable to get byte array elements",
-        //                     UPCLIENTANDROID_TAG,
-        //                     UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
-        //                 );
-        //                 env.exception_describe().unwrap();
-        //                 env.exception_clear().unwrap();
-        //                 return Err(UStatus::fail_with_code(
-        //                     UCode::INTERNAL,
-        //                     "Unable to get byte array elements",
-        //                 )); // Replace UStatus::Error with appropriate error handling
-        //             };
-        //
-        //             let Ok(element_size) = elements.size() else {
-        //                 trace!(
-        //                     "{}:{} Unable to get element size",
-        //                     UPCLIENTANDROID_TAG,
-        //                     UPANDROIDCLIENT_FN_REGISTER_LISTENER_TAG
-        //                 );
-        //                 env.exception_describe().unwrap();
-        //                 env.exception_clear().unwrap();
-        //                 return Err(UStatus::fail_with_code(
-        //                     UCode::INTERNAL,
-        //                     "Unable to get element size",
-        //                 )); // Replace UStatus::Error with appropriate error handling
-        //
-        //             };
-        //
-        //             // Convert to Vec<u8>
-        //             let data: Vec<u8> = elements.as_ptr().cast::<u8>().as_ref().unwrap().to_vec(element_size);
-        //
-        //             // Ensure you release the array elements
-        //             elements.release(env).expect("Unable to release array elements");
-        //
-        //             Ok(data)
-        //         } else {
-        //             Err("Expected a byte array but found a different type".to_string())
-        //         }
-        //     },
-        //     _ => Err("Expected an object containing a byte array but found a different type".to_string())
-        // };
 
         let foo = match ustatus_bytes {
             JValueOwned::Object(obj) => {
